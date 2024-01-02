@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="../public/styles/styles.css" rel="stylesheet" type="text/css" />
+  <title>Air Quality Dashboard</title>
+  <script defer src="https://unpkg.com/alpinejs@latest/dist/cdn.min.js"></script>
+</head>
+
+<body class="bg-brokenWhite">
+  <div class="lg:flex">
+    <%- include('partials/sidebar') %>
+
+      <div class="lg:flex-grow">
+        <p
+          class="font-bold text-4xl text-center mt-12 text-mainBlack hidden lg:block animate-fade-up animate-duration-500">
+          Air Quality Dashboard</p>
+        <p class="text-sm text-center text-mainBlack lg:block">
+          Last Updated: <span id="timestamp">
+            <%= initialData.formattedTimestamp %>
+          </span>
+        </p>
+
+        <div class="flex justify-center mt-10 lg:mr-6 animate-fade-up animate-duration-500 animate-delay-[50ms]">
+          <div class="w-[250px] sm:w-[400px] lg:w-[450px] h-24 bg-white rounded-xl shadow-sm border-2">
+            <div class="flex py-6 sm:py-4 pl-4 pr-3 lg:pr-6">
+              <div
+                class="flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-mainTeal rounded-2xl">
+                <p class="text-white text-md sm:text-xl lg:text-2xl font-semibold">AQ</p>
+              </div>
+              <div class="flex flex-grow items-center ml-4">
+                <div>
+                  <p class="text-mainTeal text-xs sm:text-md lg:text-sm font-semibold tracking-wide">Air Quality Index
+                  </p>
+                  <p class="text-xl sm:text-3xl font-bold text-mainBlack mt-1 transition" id="aqi">
+                    <%= initialData.aqi %>
+                  </p>
+                </div>
+              </div>
+              <div
+                class="flex items-center justify-center w-12 text-sm sm:text-lg lg:text-xl font-semibold sm:pr-6 <%= initialData.aqi_label_color %> transition"
+                id="aqi-category">
+                <p>
+                  <%= initialData.aqi_label %>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:px-20 grid justify-items-center grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 mt-6 gap-y-3">
+          <div
+            class="h-24 lg:h-28 w-[250px] lg:w-[285px] xl:w-[330px] bg-white rounded-xl shadow-sm border-2 animate-fade-up animate-duration-500 animate-delay-[100ms]">
+            <div class="flex py-6 sm:py-5 lg:py-6 pl-4">
+              <div
+                class="flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-mainTeal rounded-2xl">
+                <svg class="h-6 w-h-6 sm:w-7 sm:h-7 lg:w-9 lg:h-9" viewBox="0 0 35 35" fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M21.1629 15.2621C20.6291 15.2621 20.1816 15.0815 19.8205 14.7204C19.4593 14.3593 19.2788 13.9118 19.2788 13.3779C19.2788 12.8441 19.4593 12.3966 19.8205 12.0355C20.1816 11.6744 20.6291 11.4938 21.1629 11.4938H26.8153C27.3492 11.4938 27.7967 11.6744 28.1578 12.0355C28.5189 12.3966 28.6995 12.8441 28.6995 13.3779C28.6995 13.9118 28.5189 14.3593 28.1578 14.7204C27.7967 15.0815 27.3492 15.2621 26.8153 15.2621H21.1629ZM21.1629 7.72553C20.6291 7.72553 20.1816 7.54496 19.8205 7.18384C19.4593 6.82271 19.2788 6.37523 19.2788 5.84139C19.2788 5.30755 19.4593 4.86006 19.8205 4.49894C20.1816 4.13781 20.6291 3.95725 21.1629 3.95725H32.4678C33.0016 3.95725 33.4491 4.13781 33.8102 4.49894C34.1713 4.86006 34.3519 5.30755 34.3519 5.84139C34.3519 6.37523 34.1713 6.82271 33.8102 7.18384C33.4491 7.54496 33.0016 7.72553 32.4678 7.72553H21.1629ZM9.85808 34.1035C7.25169 34.1035 5.02997 33.185 3.19293 31.3479C1.3559 29.5109 0.437378 27.2892 0.437378 24.6828C0.437378 23.1755 0.767103 21.7702 1.42655 20.467C2.086 19.1638 3.01237 18.0569 4.20566 17.1462V5.84139C4.20566 4.27127 4.7552 2.93667 5.85428 1.83759C6.95336 0.738506 8.28796 0.188965 9.85808 0.188965C11.4282 0.188965 12.7628 0.738506 13.8619 1.83759C14.961 2.93667 15.5105 4.27127 15.5105 5.84139V17.1462C16.7038 18.0569 17.6302 19.1638 18.2896 20.467C18.9491 21.7702 19.2788 23.1755 19.2788 24.6828C19.2788 27.2892 18.3603 29.5109 16.5232 31.3479C14.6862 33.185 12.4645 34.1035 9.85808 34.1035ZM4.20566 24.6828H15.5105C15.5105 23.7721 15.3142 22.9243 14.9217 22.1392C14.5292 21.3541 13.9718 20.6947 13.2495 20.1609L11.7422 19.0304V5.84139C11.7422 5.30755 11.5617 4.86006 11.2005 4.49894C10.8394 4.13781 10.3919 3.95725 9.85808 3.95725C9.32424 3.95725 8.87676 4.13781 8.51563 4.49894C8.1545 4.86006 7.97394 5.30755 7.97394 5.84139V19.0304L6.46663 20.1609C5.74437 20.6947 5.18698 21.3541 4.79445 22.1392C4.40192 22.9243 4.20566 23.7721 4.20566 24.6828Z"
+                    fill="white" />
+                </svg>
+              </div>
+              <div class="flex flex-grow items-center ml-4">
+                <div>
+                  <p class="text-mainTeal text-xs sm:text-md lg:text-sm font-semibold tracking-wide">Temperature</p>
+                  <p class="text-xl sm:text-2xl xl:text-3xl font-bold text-mainBlack mt-1 transition" id="temperature">
+                    <%= initialData.temp.toFixed(2) %> °C
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="h-24 lg:h-28 w-[250px] lg:w-[285px] xl:w-[330px] bg-white rounded-xl shadow-sm border-2 animate-fade-up animate-duration-500 animate-delay-[150ms]">
+            <div class="flex py-6 sm:py-5 lg:py-6 pl-4">
+              <div
+                class="flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-mainTeal rounded-2xl">
+                <svg class="h-6 w-6 sm:w-7 sm:h-7 lg:w-9 lg:h-9" viewBox="0 0 40 32" fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M16.5479 22.5208C17.3312 23.3042 18.3431 23.6877 19.5833 23.6714C20.8236 23.655 21.7375 23.2063 22.325 22.325L33.2917 5.875L16.8417 16.8417C15.9604 17.4292 15.4953 18.3267 15.4464 19.5344C15.3974 20.742 15.7646 21.7375 16.5479 22.5208ZM19.5833 0C21.509 0 23.3613 0.269271 25.1401 0.807813C26.9189 1.34635 28.5917 2.15417 30.1583 3.23125L26.4375 5.58125C25.3604 5.02639 24.2425 4.61024 23.0839 4.33281C21.9252 4.05538 20.7583 3.91667 19.5833 3.91667C15.2424 3.91667 11.546 5.44254 8.49427 8.49427C5.44253 11.546 3.91667 15.2424 3.91667 19.5833C3.91667 20.9542 4.10434 22.3087 4.47969 23.6469C4.85503 24.9851 5.38542 26.2417 6.07083 27.4167H33.0958C33.8465 26.1764 34.3932 24.8872 34.7359 23.549C35.0786 22.2108 35.25 20.8236 35.25 19.3875C35.25 18.2125 35.1113 17.0701 34.8339 15.9604C34.5564 14.8507 34.1403 13.7736 33.5854 12.7292L35.9354 9.00833C36.9146 10.5424 37.6898 12.1743 38.2609 13.9042C38.8321 15.634 39.134 17.4292 39.1667 19.2896C39.1993 21.15 38.9872 22.9288 38.5302 24.626C38.0733 26.3233 37.4042 27.9389 36.5229 29.4729C36.1639 30.0604 35.6743 30.5174 35.0542 30.8438C34.434 31.1701 33.7812 31.3333 33.0958 31.3333H6.07083C5.38542 31.3333 4.73264 31.1701 4.1125 30.8438C3.49236 30.5174 3.00278 30.0604 2.64375 29.4729C1.79514 28.0042 1.14236 26.4457 0.685417 24.7974C0.228472 23.1491 0 21.4111 0 19.5833C0 16.8743 0.514063 14.3366 1.54219 11.9703C2.57031 9.60399 3.97378 7.53142 5.7526 5.7526C7.53142 3.97379 9.61215 2.57031 11.9948 1.54219C14.3774 0.514063 16.9069 0 19.5833 0Z"
+                    fill="white" />
+                </svg>
+              </div>
+              <div class="flex flex-grow items-center ml-4">
+                <div>
+                  <p class="text-mainTeal text-xs sm:text-md lg:text-sm font-semibold tracking-wide">Pressure</p>
+                  <p class="text-xl sm:text-2xl xl:text-3xl font-bold text-mainBlack mt-1 transition" id="pressure">
+                    <%= initialData.pre.toFixed(2) %>Pa
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="h-24 lg:h-28 w-[250px] lg:w-[285px] xl:w-[330px] bg-white rounded-xl shadow-sm border-2 animate-fade-up animate-duration-500 animate-delay-[200ms]">
+            <div class="flex py-6 sm:py-5 lg:py-6 pl-4">
+              <div
+                class="flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-mainTeal rounded-2xl">
+                <svg class="h-6 w-h-6 sm:w-7 sm:h-7 lg:w-9 lg:h-9" viewBox="0 0 34 42" fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M22.2534 32.8503C23.1365 32.8503 23.8871 32.5412 24.5053 31.9231C25.1234 31.3049 25.4325 30.5543 25.4325 29.6712C25.4325 28.7882 25.1234 28.0376 24.5053 27.4194C23.8871 26.8013 23.1365 26.4922 22.2534 26.4922C21.3704 26.4922 20.6198 26.8013 20.0016 27.4194C19.3835 28.0376 19.0744 28.7882 19.0744 29.6712C19.0744 30.5543 19.3835 31.3049 20.0016 31.9231C20.6198 32.5412 21.3704 32.8503 22.2534 32.8503ZM10.067 31.2608C10.4909 31.6847 10.9854 31.8966 11.5506 31.8966C12.1158 31.8966 12.6103 31.6847 13.0342 31.2608L23.843 20.452C24.2668 20.0281 24.4788 19.5336 24.4788 18.9684C24.4788 18.4032 24.2668 17.9087 23.843 17.4848C23.4191 17.061 22.9157 16.849 22.3329 16.849C21.7501 16.849 21.2467 17.061 20.8229 17.4848L10.067 28.2407C9.64316 28.6645 9.43122 29.1679 9.43122 29.7507C9.43122 30.3336 9.64316 30.8369 10.067 31.2608ZM11.6566 22.2534C12.5396 22.2534 13.2902 21.9444 13.9084 21.3262C14.5265 20.7081 14.8356 19.9574 14.8356 19.0744C14.8356 18.1913 14.5265 17.4407 13.9084 16.8225C13.2902 16.2044 12.5396 15.8953 11.6566 15.8953C10.7735 15.8953 10.0229 16.2044 9.40473 16.8225C8.78658 17.4407 8.4775 18.1913 8.4775 19.0744C8.4775 19.9574 8.78658 20.7081 9.40473 21.3262C10.0229 21.9444 10.7735 22.2534 11.6566 22.2534ZM16.955 41.3278C12.1158 41.3278 8.08012 39.6676 4.84807 36.3473C1.61602 33.0269 0 28.8941 0 23.9489C0 21.7589 0.494521 19.5689 1.48356 17.3789C2.4726 15.1889 3.70891 13.0871 5.19247 11.0737C6.67603 9.06033 8.28322 7.17055 10.014 5.40441C11.7449 3.63826 13.3521 2.10171 14.8356 0.794766C15.1182 0.512182 15.4449 0.309076 15.8158 0.185445C16.1867 0.0618151 16.5664 0 16.955 0C17.3436 0 17.7233 0.0618151 18.0942 0.185445C18.4651 0.309076 18.7918 0.512182 19.0744 0.794766C20.5579 2.10171 22.1651 3.63826 23.896 5.40441C25.6268 7.17055 27.234 9.06033 28.7175 11.0737C30.2011 13.0871 31.4374 15.1889 32.4264 17.3789C33.4155 19.5689 33.91 21.7589 33.91 23.9489C33.91 28.8941 32.294 33.0269 29.0619 36.3473C25.8299 39.6676 21.7942 41.3278 16.955 41.3278ZM16.955 37.0891C20.6286 37.0891 23.6664 35.8439 26.0683 33.3537C28.4703 30.8634 29.6712 27.7285 29.6712 23.9489C29.6712 21.3704 28.6027 18.4562 26.4657 15.2065C24.3287 11.9568 21.1584 8.40685 16.955 4.55666C12.7516 8.40685 9.58134 11.9568 7.4443 15.2065C5.30727 18.4562 4.23875 21.3704 4.23875 23.9489C4.23875 27.7285 5.43973 30.8634 7.84169 33.3537C10.2436 35.8439 13.2814 37.0891 16.955 37.0891Z"
+                    fill="white" />
+                </svg>
+              </div>
+              <div class="flex flex-grow items-center ml-4">
+                <div>
+                  <p class="text-mainTeal text-xs sm:text-md lg:text-sm font-semibold tracking-wide">Humidity</p>
+                  <p class="text-xl sm:text-2xl xl:text-3xl font-bold text-mainBlack mt-1 transition" id="humidity">
+                    <%= initialData.hum.toFixed(2) %> %Rh
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="h-24 lg:h-28 w-[250px] lg:w-[285px] xl:w-[330px] bg-white rounded-xl shadow-sm border-2 animate-fade-up animate-duration-500 animate-delay-[250ms]">
+            <div class="flex py-6 sm:py-5 lg:py-6 pl-4">
+              <div
+                class="flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-2xl <%= initialData.pm10_label_color %>"
+                id="pm10-icon">
+                <p class="text-white text-md sm:text-xl lg:text-2xl font-semibold">PM<sub
+                    class="font-features subs">10</sub></p>
+              </div>
+              <div class="flex flex-grow items-center ml-4">
+                <div>
+                  <p class="text-mainTeal text-xs sm:text-md lg:text-sm font-semibold tracking-wide">PM10</p>
+                  <p class="text-xl sm:text-2xl xl:text-3xl font-bold text-mainBlack mt-1 transition" id="pm10">
+                    <%= initialData.pm10 %> µg/m³
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="h-24 lg:h-28 w-[250px] lg:w-[285px] xl:w-[330px] bg-white rounded-xl shadow-sm border-2 animate-fade-up animate-duration-500 animate-delay-[300ms]">
+            <div class="flex py-6 sm:py-5 lg:py-6 pl-4">
+              <div
+                class="flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 lg:w-16 lg:h-16 <%= initialData.pm2_5_label_color %> rounded-2xl"
+                id="pm25-icon">
+                <svg class="h-6 w-h-6 sm:w-7 sm:h-7 lg:w-9 lg:h-9" viewBox="0 0 35 35" fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <p class="text-white text-md sm:text-xl lg:text-2xl font-semibold">PM<sub
+                      class="font-features subs">25</sub></p>
+                </svg>
+              </div>
+              <div class="flex flex-grow items-center ml-4">
+                <div>
+                  <p class="text-mainTeal text-xs sm:text-md lg:text-sm font-semibold tracking-wide" id="pm25-icon">
+                    PM2.5</p>
+                  <p class="text-xl sm:text-2xl xl:text-3xl font-bold text-mainBlack mt-1 transition" id="pm2.5">
+                    <%= initialData.pm2_5 %> µg/m³
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="h-24 lg:h-28 w-[250px] lg:w-[285px] xl:w-[330px] bg-white rounded-xl shadow-sm border-2 animate-fade-up animate-duration-500 animate-delay-[350ms]">
+            <div class="flex py-6 sm:py-5 lg:py-6 pl-4">
+              <div
+                class="flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-mainTeal rounded-2xl">
+                <p class="text-white text-md sm:text-xl lg:text-2xl font-semibold">PM<sub
+                    class="font-features subs">1</sub></p>
+              </div>
+              <div class="flex flex-grow items-center ml-4">
+                <div>
+                  <p class="text-mainTeal text-xs sm:text-md lg:text-sm font-semibold tracking-wide">PM1</p>
+                  <p class="text-xl sm:text-2xl xl:text-3xl font-bold text-mainBlack mt-1 transition" id="pm1">
+                    <%= initialData.pm1 %> µg/m³
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="h-24 lg:h-28 w-[250px] lg:w-[285px] xl:w-[330px] bg-white rounded-xl shadow-sm border-2 animate-fade-up animate-duration-500 animate-delay-[400ms]">
+            <div class="flex py-6 sm:py-5 lg:py-6 pl-4">
+              <div
+                class="flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 lg:w-16 lg:h-16 <%= initialData.co_label_color %> rounded-2xl"
+                id="co-icon">
+                <p class="text-white text-md sm:text-xl lg:text-2xl font-semibold">CO</p>
+              </div>
+              <div class="flex flex-grow items-center ml-4">
+                <div>
+                  <p class="text-mainTeal text-xs sm:text-md lg:text-sm font-semibold tracking-wide">CO</p>
+                  <p class="text-xl sm:text-2xl xl:text-3xl font-bold text-mainBlack mt-1 transition" id="co">
+                    <%= initialData.co.toFixed(2) %> µg/m³
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="h-24 lg:h-28 w-[250px] lg:w-[285px] xl:w-[330px] bg-white rounded-xl shadow-sm border-2 animate-fade-up animate-duration-500 animate-delay-[450ms]">
+            <div class="flex py-6 sm:py-5 lg:py-6 pl-4">
+              <div
+                class="flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-2xl <%= initialData.no2_label_color  %>"
+                id="no2-icon">
+                <p class="text-white text-md sm:text-xl lg:text-2xl font-semibold">NO<sub
+                    class="font-features subs">2</sub></p>
+              </div>
+              <div class="flex flex-grow items-center ml-4">
+                <div>
+                  <p class="text-mainTeal text-xs sm:text-md lg:text-sm font-semibold tracking-wide">NO2</p>
+                  <p class="text-xl sm:text-2xl xl:text-3xl font-bold text-mainBlack mt-1 transition" id="no">
+                    <%= initialData.no2.toFixed(2) %> µg/m³
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="h-24 lg:h-28 w-[250px] lg:w-[285px] xl:w-[330px] bg-white rounded-xl shadow-sm border-2 animate-fade-up animate-duration-500 animate-delay-[500ms]">
+            <div class="flex py-6 sm:py-5 lg:py-6 pl-4">
+              <div
+                class="flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-2xl <%= initialData.o3_label_color  %>"
+                id="o3-icon">
+                <p class="text-white text-md sm:text-xl lg:text-2xl font-semibold">O<sub
+                    class="font-features subs">3</sub></p>
+              </div>
+              <div class="flex flex-grow items-center ml-4">
+                <div>
+                  <p class="text-mainTeal text-xs sm:text-md lg:text-sm font-semibold tracking-wide">O3</p>
+                  <p class="text-xl sm:text-2xl xl:text-3xl font-bold text-mainBlack mt-1 transition" id="o3">
+                    <%= initialData.o3.toFixed(2) %> µg/m³
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  function changeAqiColor(aqi) {
+    const colorClasses = ["text-healthy", "text-moderate", "text-unhealthy", "text-unhealthy2", "text-veryUnhealthy", "text-hazardous"];
+    const aqiCategory = document.getElementById("aqi-category");
+    if (aqiCategory.classList.contains(colorClasses)) aqiCategory.classList.remove(colorClasses);
+    switch (true) {
+      case aqi >= 0 && aqi <= 50:
+        aqiCategory.classList.add(colorClasses[0]);
+        updateElement(aqiCategory, "Healthy");
+        break;
+      case aqi > 50 && aqi <= 100:
+        aqiCategory.classList.add(colorClasses[1]);
+        updateElement(aqiCategory, "Moderate");
+        break;
+      case aqi > 100 && aqi <= 150:
+        aqiCategory.classList.add(colorClasses[2]);
+        updateElement(aqiCategory, "Unhealthy for Sensitive Groups");
+        break;
+      case aqi > 150 && aqi <= 200:
+        text.classList.add(colorClasses[3]);
+        updateElement(aqiCategory, "Unhealthy");
+        break;
+      case aqi > 200 && aqi <= 300:
+        text.classList.add(colorClasses[4]);
+        updateElement(aqiCategory, "Very Unhealthy");
+        break;
+      case aqi > 300 && aqi <= 500:
+        text.classList.add(colorClasses[5]);
+        updateElement(aqiCategory, "Hazardous");
+        break;
+      default:
+        break;
+    }
+  }
+
+  function changePm10Color(pm10) {
+    const colorClasses = ["bg-mainTeal", "bg-healthy", "bg-moderate", "bg-unhealthy", "bg-unhealthy2", "bg-veryUnhealthy", "bg-hazardous"];
+    const coIcon = document.getElementById("pm10-icon");
+
+    switch (true) {
+      case pm10 >= 0 && pm10 <= 50:
+        coIcon.classList.add(colorClasses[1]);
+        break;
+      case pm10 > 50 && pm10 <= 150:
+        coIcon.classList.add(colorClasses[2]);
+        break;
+      case pm10 > 150 && pm10 <= 350:
+        coIcon.classList.add(colorClasses[3]);
+        break;
+      case pm10 > 350 && pm10 <= 420:
+        coIcon.classList.add(colorClasses[4]);
+        break;
+      case pm10 > 420 && pm10 <= 500:
+        coIcon.classList.add(colorClasses[5]);
+        break;
+      case pm10 > 500:
+        coIcon.classList.add(colorClasses[6]);
+        break;
+      default:
+        break;
+    }
+  }
+
+  function changeCoColor(co) {
+    const colorClasses = ["bg-mainTeal", "bg-healthy", "bg-moderate", "bg-unhealthy", "bg-unhealthy2", "bg-veryUnhealthy", "bg-hazardous"];
+    const coIcon = document.getElementById("co-icon");
+
+    switch (true) {
+      case co >= 0 && co <= 4000:
+        coIcon.classList.add(colorClasses[1]);
+        break;
+      case co > 4000 && co <= 8000:
+        coIcon.classList.add(colorClasses[2]);
+        break;
+      case co > 8000 && co <= 15000:
+        coIcon.classList.add(colorClasses[3]);
+        break;
+      case co > 15000 && co <= 30000:
+        coIcon.classList.add(colorClasses[4]);
+        break;
+      case co > 30000 && co <= 45000:
+        coIcon.classList.add(colorClasses[5]);
+        break;
+      case co > 45000:
+        coIcon.classList.add(colorClasses[6]);
+        break;
+      default:
+        break;
+    }
+  }
+
+  function changeNoColor(no2) {
+    const colorClasses = ["bg-mainTeal", "bg-healthy", "bg-moderate", "bg-unhealthy", "bg-unhealthy2", "bg-veryUnhealthy", "bg-hazardous"];
+    const coIcon = document.getElementById("no2-icon");
+
+    switch (true) {
+      case no2 >= 0 && no2 <= 80:
+        coIcon.classList.add(colorClasses[1]);
+        break;
+      case no2 > 80 && no2 <= 200:
+        coIcon.classList.add(colorClasses[2]);
+        break;
+      case no2 > 200 && no2 <= 1130:
+        coIcon.classList.add(colorClasses[3]);
+        break;
+      case no2 > 1130 && no2 <= 2260:
+        coIcon.classList.add(colorClasses[4]);
+        break;
+      case no2 > 2260 && no2 <= 3000:
+        coIcon.classList.add(colorClasses[5]);
+        break;
+      case no2 > 3000:
+        coIcon.classList.add(colorClasses[6]);
+        break;
+      default:
+        break;
+    }
+  }
+
+  function changeo3Color(o3) {
+    const colorClasses = ["bg-mainTeal", "bg-healthy", "bg-moderate", "bg-unhealthy", "bg-unhealthy2", "bg-veryUnhealthy", "bg-hazardous"];
+    const coIcon = document.getElementById("o3-icon");
+
+    switch (true) {
+      case o3 >= 0 && o3 <= 120:
+        coIcon.classList.add(colorClasses[1]);
+        break;
+      case o3 > 120 && o3 <= 235:
+        coIcon.classList.add(colorClasses[2]);
+        break;
+      case o3 > 235 && o3 <= 400:
+        coIcon.classList.add(colorClasses[3]);
+        break;
+      case o3 > 400 && o3 <= 800:
+        coIcon.classList.add(colorClasses[4]);
+        break;
+      case o3 > 800 && o3 <= 1000:
+        coIcon.classList.add(colorClasses[5]);
+        break;
+      case o3 > 1000:
+        coIcon.classList.add(colorClasses[6]);
+        break;
+      default:
+        break;
+    }
+  }
+
+  function changePm25Color(pm25) {
+    const colorClasses = ["bg-mainTeal", "bg-healthy", "bg-moderate", "bg-unhealthy", "bg-unhealthy2", "bg-veryUnhealthy", "bg-hazardous"];
+    const pm25icon = document.getElementById("pm25-icon");
+
+    switch (true) {
+      case pm25 >= 0 && pm25 <= 15.5:
+        pm25icon.classList.add(colorClasses[1]);
+        break;
+      case pm25 > 15.5 && pm25 <= 55.4:
+        pm25icon.classList.add(colorClasses[2]);
+        break;
+      case pm25 > 55.4 && pm25 <= 150.4:
+        pm25icon.classList.add(colorClasses[3]);
+        break;
+      case pm25 > 150.4 && pm25 <= 250.4:
+        pm25icon.classList.add(colorClasses[4]);
+        break;
+      case pm25 > 250.4 && pm25 <= 500:
+        pm25icon.classList.add(colorClasses[5]);
+        break;
+      case pm25 > 500:
+        pm25icon.classList.add(colorClasses[6]);
+        break;
+      default:
+        break;
+    }
+  }
+
+  function updateTimestamp(timestamp) {
+  const timestampElement = document.getElementById("timestamp");
+
+  // Mengubah timestamp ke format Date jika dalam bentuk string
+  const date = new Date(timestamp);
+
+  // Format waktu ke dalam format yang diinginkan (misalnya, 'HH:MM')
+  const formattedTime = date.toLocaleTimeString('en-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+
+  // Memperbarui elemen timestamp di DOM
+  updateElement(timestampElement, formattedTime);
+}
+
+  function updateElement(element, newData) {
+    element.classList.add("opacity-0");
+    setTimeout(() => {
+      element.textContent = newData;
+      element.classList.remove("opacity-0");
+    }, 250);
+  }
+
+  var socket = io();
+  socket.on("airQualityUpdate", function (data) {
+    //parse json data
+    data = JSON.parse(data);
+    updateElement(document.getElementById("aqi"), data.aqi);
+    changeAqiColor(data.aqi, document.getElementById("aqi-category"));
+    updateElement(document.getElementById("pm10"), Math.floor(data.pm10) + " µg/m³");
+    changePm10Color(data.pm10)
+    updateElement(document.getElementById("pm2.5"), Math.floor(data.pm25) + " µg/m³");
+    changePm25Color(data.pm25)
+    updateElement(document.getElementById("pm1"), Math.floor(data.pm1) + " µg/m³");
+    updateElement(document.getElementById("no"), data.no2.toFixed(2) + " µg/m³");
+    changeNoColor(data.no2)
+    updateElement(document.getElementById("co"), data.co.toFixed(2) + " µg/m³");
+    changeCoColor(data.co)
+    updateElement(document.getElementById("o3"), data.ozone.toFixed(2) + " µg/m³");
+    changeo3Color(data.o3)
+    updateElement(document.getElementById("temperature"), data.temperature.toFixed(2) + " °C");
+    updateElement(document.getElementById("humidity"), data.humidity.toFixed(2) + " %Rh");
+    updateElement(document.getElementById("pressure"), data.pressure.toFixed(2) + "Pa");
+    updateTimestamp(data.timestamp)
+  });
+</script>
+ 
+
+</html>

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="../public/styles/styles.css" rel="stylesheet" type="text/css" />
+  <title>Air Quality Dashboard</title>
+  <script defer src="https://unpkg.com/alpinejs@latest/dist/cdn.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.2"></script>
+</head>
+
+<body class="bg-brokenWhite">
+  <div class="lg:flex">
+    <%- include('partials/sidebar') %>
+
+      <div class="lg:flex-grow">
+        <p
+          class="font-bold text-4xl text-center mt-12 text-mainBlack hidden lg:block animate-fade-up animate-duration-500">
+          Air Quality Dashboard</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 justify-items-center gap-y-6 my-10">
+          <div
+            class="bg-white xl:h-80 xl:w-[490px] rounded-xl drop-shadow-sm border-2 xl:ml-20 p-4 animate-fade-up animate-duration-500 animate-delay-[100ms]">
+            <p class="font-bold text-mainBlack text-lg mb-2">Particulate Matter 1 <span class="font-normal">(PM1)</span>
+            </p>
+            <p class="text-xs text-mainBlack">Concentration (µg/m³)</p>
+            <canvas id="pm1-chart"></canvas>
+          </div>
+          <div
+            class="bg-white xl:h-80 xl:w-[490px] rounded-xl drop-shadow-sm border-2 xl:mr-20 p-4 animate-fade-up animate-duration-500 animate-delay-[150ms]">
+            <p class="font-bold text-mainBlack text-lg mb-2">Particulate Matter 2.5 <span
+                class="font-normal">(PM2.5)</span></p>
+            <p class="text-xs text-mainBlack">Concentration (µg/m³)</p>
+            <canvas id="pm2.5-chart"></canvas>
+          </div>
+          <div
+            class="bg-white xl:h-80 xl:w-[490px] rounded-xl drop-shadow-sm border-2 xl:ml-20 p-4 animate-fade-up animate-duration-500 animate-delay-[200ms]">
+            <p class="font-bold text-mainBlack text-lg mb-2">Carbon Monoxide <span class="font-normal">(CO)</span></p>
+            <p class="text-xs text-mainBlack">Concentration (µg/m³)</p>
+            <canvas id="co-chart"></canvas>
+          </div>
+          <div
+            class="bg-white xl:h-80 xl:w-[490px] rounded-xl drop-shadow-sm border-2 xl:mr-20 p-4 animate-fade-up animate-duration-500 animate-delay-[250ms]">
+            <p class="font-bold text-mainBlack text-lg mb-2">Nitrogen Dioxide <span class="font-normal">(NO2)</span></p>
+            <p class="text-xs text-mainBlack">Concentration (µg/m³)</p>
+            <canvas id="no2-chart"></canvas>
+          </div>
+          <div
+            class="bg-white xl:h-80 xl:w-[490px] rounded-xl drop-shadow-sm border-2 xl:ml-20 p-4 animate-fade-up animate-duration-500 animate-delay-[300ms]">
+            <p class="font-bold text-mainBlack text-lg mb-2">Particulate Matter 10 <span
+                class="font-normal">(PM10)</span></p>
+            <p class="text-xs text-mainBlack">Concentration (µg/m³)</p>
+            <canvas id="pm10-chart"></canvas>
+          </div>
+          <div
+            class="bg-white xl:h-80 xl:w-[490px] rounded-xl drop-shadow-sm border-2 xl:mr-20 p-4 animate-fade-up animate-duration-500 animate-delay-[350ms]">
+            <p class="font-bold text-mainBlack text-lg mb-2">Ozone <span class="font-normal">(O3)</span></p>
+            <p class="text-xs text-mainBlack">Concentration (µg/m³)</p>
+            <canvas id="o3-chart"></canvas>
+          </div>
+        </div>
+      </div>
+  </div>
+</body>
+<!-- PM1 CHART -->
+<script>
+  var pm1 = <%- JSON.stringify(data.pm1) %>;
+  var label = <%- JSON.stringify(data.labels) %> ;
+  const ctx = document.getElementById("pm1-chart");
+  new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: label,
+      datasets: [
+        {
+          label: "PM1",
+          data: pm1,
+          borderColor: "rgba(79, 209, 197, 1)",
+          backgroundColor: (context) => {
+            const bgColor = ["rgba(183, 236, 231, 0.5)", "rgba(184, 236, 232, 0.5)", "rgba(208, 243, 239, 0.5)", "rgba(228, 248, 246, 0.5)", "rgba(244, 252, 251, 0.5)", "rgba(255, 255, 255, 0.5)"];
+            if (!context.chart.chartArea) return;
+            const {
+              ctx,
+              data,
+              chartArea: { top, bottom },
+            } = context.chart;
+            const gradientBg = ctx.createLinearGradient(0, top, 0, bottom);
+            gradientBg.addColorStop(0, bgColor[0]);
+            gradientBg.addColorStop(0.5, bgColor[1]);
+            gradientBg.addColorStop(0.7, bgColor[2]);
+            gradientBg.addColorStop(0.8, bgColor[3]);
+            gradientBg.addColorStop(0.9, bgColor[4]);
+            gradientBg.addColorStop(1, bgColor[5]);
+            return gradientBg;
+          },
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+      elements: {
+        point: {
+          pointStyle: false,
+        },
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+          border: {
+            display: false,
+          },
+          ticks: {
+            display: true,
+            color: "rgba(203, 213, 224, 1)",
+          },
+        },
+        y: {
+          border: {
+            dash: [5, 5],
+          },
+          ticks: {
+            color: "rgba(203, 213, 224, 1)",
+          },
+        },
+      },
+    },
+  });
+</script>
+
+<!-- PM2.5 CHART -->
+<script>
+  var pm25 = <%- JSON.stringify(data.pm25) %>;
+  const ctx2 = document.getElementById("pm2.5-chart");
+  new Chart(ctx2, {
+    type: "line",
+    data: {
+      labels: label,
+      datasets: [
+        {
+          label: "PM2.5",
+          data: pm25,
+          borderColor: "rgba(79, 209, 197, 1)",
+          backgroundColor: (context) => {
+            const bgColor = ["rgba(183, 236, 231, 0.5)", "rgba(184, 236, 232, 0.5)", "rgba(208, 243, 239, 0.5)", "rgba(228, 248, 246, 0.5)", "rgba(244, 252, 251, 0.5)", "rgba(255, 255, 255, 0.5)"];
+            if (!context.chart.chartArea) return;
+            const {
+              ctx,
+              data,
+              chartArea: { top, bottom },
+            } = context.chart;
+            const gradientBg = ctx.createLinearGradient(0, top, 0, bottom);
+            gradientBg.addColorStop(0, bgColor[0]);
+            gradientBg.addColorStop(0.5, bgColor[1]);
+            gradientBg.addColorStop(0.7, bgColor[2]);
+            gradientBg.addColorStop(0.8, bgColor[3]);
+            gradientBg.addColorStop(0.9, bgColor[4]);
+            gradientBg.addColorStop(1, bgColor[5]);
+            return gradientBg;
+          },
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false,
+        },
+        annotation: {
+          annotations: [
+            {
+              type: 'line',
+              yMin: 15.5,
+              yMax: 15.5,
+              borderColor: 'green',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 55.4,
+              yMax: 55.4,
+              borderColor: 'yellow',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 150.4,
+              yMax: 150.4,
+              borderColor: 'orange',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 250.4,
+              yMax: 250.4,
+              borderColor: 'red',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 500,
+              yMax: 500,
+              borderColor: 'brown',
+              borderWidth: 2,
+            }
+          ]
+        }
+      },
+      elements: {
+        point: {
+          pointStyle: false,
+        },
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+          border: {
+            display: false,
+          },
+          ticks: {
+            display: true,
+            color: "rgba(203, 213, 224, 1)",
+          },
+        },
+        y: {
+          border: {
+            dash: [5, 5],
+          },
+          ticks: {
+            color: "rgba(203, 213, 224, 1)",
+          },
+        },
+      },
+    },
+  }
+  );
+</script>
+
+<!-- CO CHART -->
+<script>
+  var co = <%- JSON.stringify(data.co) %>;
+  const ctx3 = document.getElementById("co-chart");
+  new Chart(ctx3, {
+    type: "line",
+    data: {
+      labels: label,
+      datasets: [
+        {
+          label: "CO",
+          data: co,
+          borderColor: "rgba(79, 209, 197, 1)",
+          backgroundColor: (context) => {
+            const bgColor = ["rgba(183, 236, 231, 0.5)", "rgba(184, 236, 232, 0.5)", "rgba(208, 243, 239, 0.5)", "rgba(228, 248, 246, 0.5)", "rgba(244, 252, 251, 0.5)", "rgba(255, 255, 255, 0.5)"];
+            if (!context.chart.chartArea) return;
+            const {
+              ctx,
+              data,
+              chartArea: { top, bottom },
+            } = context.chart;
+            const gradientBg = ctx.createLinearGradient(0, top, 0, bottom);
+            gradientBg.addColorStop(0, bgColor[0]);
+            gradientBg.addColorStop(0.5, bgColor[1]);
+            gradientBg.addColorStop(0.7, bgColor[2]);
+            gradientBg.addColorStop(0.8, bgColor[3]);
+            gradientBg.addColorStop(0.9, bgColor[4]);
+            gradientBg.addColorStop(1, bgColor[5]);
+            return gradientBg;
+          },
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false,
+        },
+        annotation: {
+          annotations: [
+            {
+              type: 'line',
+              yMin: 4000,
+              yMax: 4000,
+              borderColor: 'green',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 8000,
+              yMax: 8000,
+              borderColor: 'yellow',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 15000,
+              yMax: 15000,
+              borderColor: 'orange',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 30000,
+              yMax: 30000,
+              borderColor: 'red',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 45000,
+              yMax: 45000,
+              borderColor: 'brown',
+              borderWidth: 2,
+            }
+          ]
+        }
+      },
+    },
+    elements: {
+      point: {
+        pointStyle: false,
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+        border: {
+          display: false,
+        },
+        ticks: {
+          display: true,
+          color: "rgba(203, 213, 224, 1)",
+        },
+      },
+      y: {
+        border: {
+          dash: [5, 5],
+        },
+        ticks: {
+          color: "rgba(203, 213, 224, 1)",
+        },
+      },
+    },
+  },
+  );
+</script>
+
+<!-- NO2 CHART -->
+<script>
+  var no2 = <%- JSON.stringify(data.no2) %>;
+  const ctx4 = document.getElementById("no2-chart");
+  new Chart(ctx4, {
+    type: "line",
+    data: {
+      labels: label,
+      datasets: [
+        {
+          label: "NO2",
+          data: no2,
+          borderColor: "rgba(79, 209, 197, 1)",
+          backgroundColor: (context) => {
+            const bgColor = ["rgba(183, 236, 231, 0.5)", "rgba(184, 236, 232, 0.5)", "rgba(208, 243, 239, 0.5)", "rgba(228, 248, 246, 0.5)", "rgba(244, 252, 251, 0.5)", "rgba(255, 255, 255, 0.5)"];
+            if (!context.chart.chartArea) return;
+            const {
+              ctx,
+              data,
+              chartArea: { top, bottom },
+            } = context.chart;
+            const gradientBg = ctx.createLinearGradient(0, top, 0, bottom);
+            gradientBg.addColorStop(0, bgColor[0]);
+            gradientBg.addColorStop(0.5, bgColor[1]);
+            gradientBg.addColorStop(0.7, bgColor[2]);
+            gradientBg.addColorStop(0.8, bgColor[3]);
+            gradientBg.addColorStop(0.9, bgColor[4]);
+            gradientBg.addColorStop(1, bgColor[5]);
+            return gradientBg;
+          },
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false,
+        },
+        annotation: {
+          annotations: [
+            {
+              type: 'line',
+              yMin: 80,
+              yMax: 80,
+              borderColor: 'green',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 200,
+              yMax: 200,
+              borderColor: 'yellow',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 1130,
+              yMax: 1130,
+              borderColor: 'orange',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 2260,
+              yMax: 2260,
+              borderColor: 'red',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 3000,
+              yMax: 3000,
+              borderColor: 'brown',
+              borderWidth: 2,
+            }
+          ]
+        }
+      },
+    },
+    elements: {
+      point: {
+        pointStyle: false,
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+        border: {
+          display: false,
+        },
+        ticks: {
+          display: true,
+          color: "rgba(203, 213, 224, 1)",
+        },
+      },
+      y: {
+        border: {
+          dash: [5, 5],
+        },
+        ticks: {
+          color: "rgba(203, 213, 224, 1)",
+        },
+      },
+    },
+  },
+  );
+</script>
+
+<!-- PM10 CHART -->
+<script>
+  var pm10 = <%- JSON.stringify(data.pm10) %>;
+  const ctx5 = document.getElementById("pm10-chart");
+  new Chart(ctx5, {
+    type: "line",
+    data: {
+      labels: label,
+      datasets: [
+        {
+          label: "PM10",
+          data: pm10,
+          borderColor: "rgba(79, 209, 197, 1)",
+          backgroundColor: (context) => {
+            const bgColor = ["rgba(183, 236, 231, 0.5)", "rgba(184, 236, 232, 0.5)", "rgba(208, 243, 239, 0.5)", "rgba(228, 248, 246, 0.5)", "rgba(244, 252, 251, 0.5)", "rgba(255, 255, 255, 0.5)"];
+            if (!context.chart.chartArea) return;
+            const {
+              ctx,
+              data,
+              chartArea: { top, bottom },
+            } = context.chart;
+            const gradientBg = ctx.createLinearGradient(0, top, 0, bottom);
+            gradientBg.addColorStop(0, bgColor[0]);
+            gradientBg.addColorStop(0.5, bgColor[1]);
+            gradientBg.addColorStop(0.7, bgColor[2]);
+            gradientBg.addColorStop(0.8, bgColor[3]);
+            gradientBg.addColorStop(0.9, bgColor[4]);
+            gradientBg.addColorStop(1, bgColor[5]);
+            return gradientBg;
+          },
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false,
+        },
+        annotation: {
+          annotations: [
+            {
+              type: 'line',
+              yMin: 50,
+              yMax: 50,
+              borderColor: 'green',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 150,
+              yMax: 150,
+              borderColor: 'yellow',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 350,
+              yMax: 350,
+              borderColor: 'orange',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 420,
+              yMax: 420,
+              borderColor: 'red',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 500,
+              yMax: 500,
+              borderColor: 'brown',
+              borderWidth: 2,
+            }
+          ]
+        },
+      },
+      elements: {
+        point: {
+          pointStyle: false,
+        },
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+          border: {
+            display: false,
+          },
+          ticks: {
+            display: true,
+            color: "rgba(203, 213, 224, 1)",
+          },
+        },
+        y: {
+          border: {
+            dash: [5, 5],
+          },
+          ticks: {
+            color: "rgba(203, 213, 224, 1)",
+          },
+        },
+      },
+    },
+  });
+</script>
+
+<!-- O3 CHART -->
+<script>
+  var o3 = <%- JSON.stringify(data.o3) %>;
+  const ctx6 = document.getElementById("o3-chart");
+  new Chart(ctx6, {
+    type: "line",
+    data: {
+      labels: label,
+      datasets: [
+        {
+          label: "O3",
+          data: o3,
+          borderColor: "rgba(79, 209, 197, 1)",
+          backgroundColor: (context) => {
+            const bgColor = ["rgba(183, 236, 231, 0.5)", "rgba(184, 236, 232, 0.5)", "rgba(208, 243, 239, 0.5)", "rgba(228, 248, 246, 0.5)", "rgba(244, 252, 251, 0.5)", "rgba(255, 255, 255, 0.5)"];
+            if (!context.chart.chartArea) return;
+            const {
+              ctx,
+              data,
+              chartArea: { top, bottom },
+            } = context.chart;
+            const gradientBg = ctx.createLinearGradient(0, top, 0, bottom);
+            gradientBg.addColorStop(0, bgColor[0]);
+            gradientBg.addColorStop(0.5, bgColor[1]);
+            gradientBg.addColorStop(0.7, bgColor[2]);
+            gradientBg.addColorStop(0.8, bgColor[3]);
+            gradientBg.addColorStop(0.9, bgColor[4]);
+            gradientBg.addColorStop(1, bgColor[5]);
+            return gradientBg;
+          },
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false,
+        },
+        annotation: {
+          annotations: [
+            {
+              type: 'line',
+              yMin: 120,
+              yMax: 120,
+              borderColor: 'green',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 235,
+              yMax: 235,
+              borderColor: 'yellow',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 400,
+              yMax: 400,
+              borderColor: 'orange',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 800,
+              yMax: 800,
+              borderColor: 'red',
+              borderWidth: 2,
+            },
+            {
+              type: 'line',
+              yMin: 1000,
+              yMax: 1000,
+              borderColor: 'brown',
+              borderWidth: 2,
+            }
+          ]
+        },
+      },
+      elements: {
+        point: {
+          pointStyle: false,
+        },
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+          border: {
+            display: false,
+          },
+          ticks: {
+            display: true,
+            color: "rgba(203, 213, 224, 1)",
+          },
+        },
+        y: {
+          border: {
+            dash: [5, 5],
+          },
+        },
+      },
+    },
+  });
+</script>
+
+</html>

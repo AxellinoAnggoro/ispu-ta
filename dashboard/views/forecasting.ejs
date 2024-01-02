@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../public/styles/styles.css" rel="stylesheet" type="text/css" />
+    <title>Air Quality Dashboard</title>
+    <script defer src="https://unpkg.com/alpinejs@latest/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+
+  <body class="bg-brokenWhite">
+    <div class="lg:flex">
+      <%- include('partials/sidebar') %>
+
+      <div class="lg:flex-grow">
+        <p class="font-bold text-4xl text-center mt-12 text-mainBlack hidden lg:block animate-fade-up animate-duration-500">Air Quality Dashboard</p>
+        <div class="flex justify-center mt-10 px-6 mx-4">
+          <div class="bg-white w-11/12 h-[540px] xl:w-3/4 rounded-xl drop-shadow-sm border-2 p-4 lg:p-6 overflow-x-auto overflow-y-hidden animate-fade-up animate-duration-500 animate-delay-[100ms]">
+            <p class="font-bold text-mainBlack text-lg mb-2">Forecasted Pollutant</p>
+            <p class="text-xs text-mainBlack">Concentration (µg/m³)</p>
+            <div class="w-[850px] xl:w-auto">
+              <canvas id="forecast-chart"></canvas>
+              <div id="pollutant-controls">
+                <input type="checkbox" id="checkboxPM1" checked> PM1
+                <input type="checkbox" id="checkboxPM25" checked> PM2.5
+                <input type="checkbox" id="checkboxPM10" checked> PM10
+                <input type="checkbox" id="checkboxCO" checked> CO
+                <input type="checkbox" id="checkboxNO2" checked> NO2
+                <input type="checkbox" id="checkboxO3" checked> O3
+              </div>              
+              <p class="text-center text-mainBlack text-xs">Time</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    var label = <%- JSON.stringify(data.labels) %> ;
+    var pm1 = <%- JSON.stringify(data.pm1) %>;
+    var pm25 = <%- JSON.stringify(data.pm25) %>;
+    var pm10 = <%- JSON.stringify(data.pm10) %>;
+    var co = <%- JSON.stringify(data.co) %>;
+    var o3 = <%- JSON.stringify(data.o3) %>;
+    var no2 = <%- JSON.stringify(data.no2) %>;
+    const ctx = document.getElementById("forecast-chart");
+
+    function updateChartData(chart) {
+        chart.data.datasets[0].hidden = !document.getElementById('checkboxPM1').checked;
+        chart.data.datasets[1].hidden = !document.getElementById('checkboxPM25').checked;
+        chart.data.datasets[2].hidden = !document.getElementById('checkboxPM10').checked;
+        chart.data.datasets[3].hidden = !document.getElementById('checkboxCO').checked;
+        chart.data.datasets[4].hidden = !document.getElementById('checkboxNO2').checked;
+        chart.data.datasets[5].hidden = !document.getElementById('checkboxO3').checked;
+        chart.update();
+    }
+    var myChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: label,
+        datasets: [
+          {
+            label: "PM1",
+            data: pm1,
+            borderColor: "rgba(209, 79, 79, 1)",
+            backgroundColor: "rgba(209, 79, 79, 1)",
+            tension: 0.4,
+          },
+          {
+            label: "PM2.5",
+            data: pm25,
+            borderColor: "rgba(79, 209, 197, 1)",
+            backgroundColor: "rgba(79, 209, 197, 1)",
+            tension: 0.4,
+          },
+          {
+            label: "PM10",
+            data: pm10,
+            borderColor: "rgba(45, 55, 72, 1)",
+            backgroundColor: "rgba(45, 55, 72, 1)",
+            tension: 0.4,
+          },
+          {
+            label: "CO",
+            data: co,
+            borderColor: "rgba(121, 79, 209, 1)",
+            backgroundColor: "rgba(121, 79, 209, 1)",
+            tension: 0.4,
+          },
+          {
+            label: "NO2",
+            data: no2,
+            borderColor: "rgba(136, 209, 79, 1)",
+            backgroundColor: "rgba(136, 209, 79, 1)",
+            tension: 0.4,
+          },
+          {
+            label: "O3",
+            data: o3,
+            borderColor: "rgba(79, 147, 209, 1)",
+            backgroundColor: "rgba(79, 147, 209, 1)",
+            tension: 0.4,
+          },
+        ],
+      },
+      options: {
+        plugins: {
+          legend: {
+            display: true,
+            position: "right",
+            labels: {
+              boxWidth: 10,
+              color: "rgba(45, 55, 72, 1)",
+            },
+          },
+        },
+        elements: {
+          point: {
+            pointStyle: false,
+          },
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false,
+            },
+            border: {
+              display: false,
+            },
+            ticks: {
+              display: true,
+              color: "rgba(203, 213, 224, 1)",
+            },
+          },
+          y: {
+            border: {
+              dash: [5, 5],
+            },
+            ticks: {
+              color: "rgba(203, 213, 224, 1)",
+            },
+          },
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index'
+        }
+      },
+      
+    });
+    document.getElementById('pollutant-controls').addEventListener('change', function() {
+        updateChartData(myChart);
+    });
+    updateChartData(myChart);
+  </script>
+</html>
