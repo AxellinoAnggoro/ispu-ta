@@ -28,7 +28,8 @@
           <div class="w-[250px] sm:w-[400px] lg:w-[450px] h-24 bg-white rounded-xl shadow-sm border-2">
             <div class="flex py-6 sm:py-4 pl-4 pr-3 lg:pr-6">
               <div
-                class="flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-mainTeal rounded-2xl">
+                class="flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-2xl <%= initialData.aqi_bg_color %>"
+                id="aqi-icon">
                 <p class="text-white text-md sm:text-xl lg:text-2xl font-semibold">AQ</p>
               </div>
               <div class="flex flex-grow items-center ml-4">
@@ -282,6 +283,34 @@
     }
   }
 
+  function changeAqiBg(aqi) {
+    const colorClasses = ["bg-healthy", "bg-moderate", "bg-unhealthy", "bg-unhealthy2", "bg-veryUnhealthy", "bg-hazardous"];
+    const aqiIcon = document.getElementById("aqi-icon");
+    if (aqiIcon.classList.contains(colorClasses)) aqiIcon.classList.remove(colorClasses);
+    switch (true) {
+      case aqi >= 0 && aqi <= 50:
+        aqiIcon.classList.add(colorClasses[0]);
+        break;
+      case aqi > 50 && aqi <= 100:
+        aqiIcon.classList.add(colorClasses[1]);
+        break;
+      case aqi > 100 && aqi <= 150:
+        aqiIcon.classList.add(colorClasses[2]);
+        break;
+      case aqi > 150 && aqi <= 200:
+        aqiIcon.classList.add(colorClasses[3]);
+        break;
+      case aqi > 200 && aqi <= 300:
+        aqiIcon.classList.add(colorClasses[4]);
+        break;
+      case aqi > 300 && aqi <= 500:
+        aqiIcon.classList.add(colorClasses[5]);
+        break;
+      default:
+        break;
+    }
+  }
+
   function changePm10Color(pm10) {
     const colorClasses = ["bg-mainTeal", "bg-healthy", "bg-moderate", "bg-unhealthy", "bg-unhealthy2", "bg-veryUnhealthy", "bg-hazardous"];
     const coIcon = document.getElementById("pm10-icon");
@@ -423,21 +452,21 @@
   }
 
   function updateTimestamp(timestamp) {
-  const timestampElement = document.getElementById("timestamp");
+    const timestampElement = document.getElementById("timestamp");
 
-  // Mengubah timestamp ke format Date jika dalam bentuk string
-  const date = new Date(timestamp);
+    // Mengubah timestamp ke format Date jika dalam bentuk string
+    const date = new Date(timestamp);
 
-  // Format waktu ke dalam format yang diinginkan (misalnya, 'HH:MM')
-  const formattedTime = date.toLocaleTimeString('en-ID', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  });
+    // Format waktu ke dalam format yang diinginkan (misalnya, 'HH:MM')
+    const formattedTime = date.toLocaleTimeString('en-ID', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
 
-  // Memperbarui elemen timestamp di DOM
-  updateElement(timestampElement, formattedTime);
-}
+    // Memperbarui elemen timestamp di DOM
+    updateElement(timestampElement, formattedTime);
+  }
 
   function updateElement(element, newData) {
     element.classList.add("opacity-0");
@@ -453,6 +482,7 @@
     data = JSON.parse(data);
     updateElement(document.getElementById("aqi"), data.aqi);
     changeAqiColor(data.aqi, document.getElementById("aqi-category"));
+    changeAqiBg(data.aqi, document.getElementById("aqi-icon"))
     updateElement(document.getElementById("pm10"), Math.floor(data.pm10) + " µg/m³");
     changePm10Color(data.pm10)
     updateElement(document.getElementById("pm2.5"), Math.floor(data.pm25) + " µg/m³");

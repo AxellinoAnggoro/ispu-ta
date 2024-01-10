@@ -28,6 +28,11 @@
             </p>
             <p class="text-xs text-mainBlack">Concentration (µg/m³)</p>
             <canvas id="pm1-chart"></canvas>
+              <div class="chart-buttons">
+                <button id="day-btn" class="timeframe-button mr-2 bg-mainTeal text-white font-bold px-4 rounded">Day</button>
+                <button id="week-btn" class="timeframe-button mx-2 bg-mainTeal text-white font-bold px-4 rounded">Week</button>
+                <button id="month-btn" class="timeframe-button ml-2 bg-mainTeal text-white font-bold px-4 rounded">Month</button>
+              </div>
           </div>
           <div
             class="bg-white xl:h-80 xl:w-[490px] rounded-xl drop-shadow-sm border-2 xl:mr-20 p-4 animate-fade-up animate-duration-500 animate-delay-[150ms]">
@@ -35,18 +40,33 @@
                 class="font-normal">(PM2.5)</span></p>
             <p class="text-xs text-mainBlack">Concentration (µg/m³)</p>
             <canvas id="pm2.5-chart"></canvas>
+            <div class="chart-buttons">
+              <button id="pm25-day-btn" class="timeframe-button mr-2 bg-mainTeal text-white font-bold px-4 rounded">Day</button>
+              <button id="pm25-week-btn" class="timeframe-button mx-2 bg-mainTeal text-white font-bold px-4 rounded">Week</button>
+              <button id="pm25-month-btn" class="timeframe-button ml-2 bg-mainTeal text-white font-bold px-4 rounded">Month</button>
+            </div>
           </div>
           <div
             class="bg-white xl:h-80 xl:w-[490px] rounded-xl drop-shadow-sm border-2 xl:ml-20 p-4 animate-fade-up animate-duration-500 animate-delay-[200ms]">
             <p class="font-bold text-mainBlack text-lg mb-2">Carbon Monoxide <span class="font-normal">(CO)</span></p>
             <p class="text-xs text-mainBlack">Concentration (µg/m³)</p>
             <canvas id="co-chart"></canvas>
+            <div class="chart-buttons">
+              <button id="co-day-btn" class="timeframe-button mr-2 bg-mainTeal text-white font-bold px-4 rounded">Day</button>
+              <button id="co-week-btn" class="timeframe-button mx-2 bg-mainTeal text-white font-bold px-4 rounded">Week</button>
+              <button id="co-month-btn" class="timeframe-button ml-2 bg-mainTeal text-white font-bold px-4 rounded">Month</button>
+            </div>
           </div>
           <div
             class="bg-white xl:h-80 xl:w-[490px] rounded-xl drop-shadow-sm border-2 xl:mr-20 p-4 animate-fade-up animate-duration-500 animate-delay-[250ms]">
             <p class="font-bold text-mainBlack text-lg mb-2">Nitrogen Dioxide <span class="font-normal">(NO2)</span></p>
             <p class="text-xs text-mainBlack">Concentration (µg/m³)</p>
             <canvas id="no2-chart"></canvas>
+            <div class="chart-buttons">
+              <button id="no2-day-btn" class="timeframe-button mr-2 bg-mainTeal text-white font-bold px-4 rounded">Day</button>
+              <button id="no2-week-btn" class="timeframe-button mx-2 bg-mainTeal text-white font-bold px-4 rounded">Week</button>
+              <button id="no2-month-btn" class="timeframe-button ml-2 bg-mainTeal text-white font-bold px-4 rounded">Month</button>
+            </div>
           </div>
           <div
             class="bg-white xl:h-80 xl:w-[490px] rounded-xl drop-shadow-sm border-2 xl:ml-20 p-4 animate-fade-up animate-duration-500 animate-delay-[300ms]">
@@ -54,12 +74,22 @@
                 class="font-normal">(PM10)</span></p>
             <p class="text-xs text-mainBlack">Concentration (µg/m³)</p>
             <canvas id="pm10-chart"></canvas>
+            <div class="chart-buttons">
+              <button id="pm10-day-btn" class="timeframe-button mr-2 bg-mainTeal text-white font-bold px-4 rounded">Day</button>
+              <button id="pm10-week-btn" class="timeframe-button mx-2 bg-mainTeal text-white font-bold px-4 rounded">Week</button>
+              <button id="pm10-month-btn" class="timeframe-button ml-2 bg-mainTeal text-white font-bold px-4 rounded">Month</button>
+            </div>
           </div>
           <div
             class="bg-white xl:h-80 xl:w-[490px] rounded-xl drop-shadow-sm border-2 xl:mr-20 p-4 animate-fade-up animate-duration-500 animate-delay-[350ms]">
             <p class="font-bold text-mainBlack text-lg mb-2">Ozone <span class="font-normal">(O3)</span></p>
             <p class="text-xs text-mainBlack">Concentration (µg/m³)</p>
             <canvas id="o3-chart"></canvas>
+            <div class="chart-buttons">
+              <button id="o3-day-btn" class="timeframe-button mr-2 bg-mainTeal text-white font-bold px-4 rounded">Day</button>
+              <button id="o3-week-btn" class="timeframe-button mx-2 bg-mainTeal text-white font-bold px-4 rounded">Week</button>
+              <button id="o3-month-btn" class="timeframe-button ml-2 bg-mainTeal text-white font-bold px-4 rounded">Month</button>
+            </div>
           </div>
         </div>
       </div>
@@ -67,17 +97,25 @@
 </body>
 <!-- PM1 CHART -->
 <script>
-  var pm1 = <%- JSON.stringify(data.pm1) %>;
+  var data = <%- JSON.stringify(data.pm1) %>;
   var label = <%- JSON.stringify(data.labels) %> ;
+  var pm1_dailyData = <%- JSON.stringify(data_daily.pm1) %>;
+  var pm1_weeklyData = <%- JSON.stringify(data_weekly.avg_pm1) %>;
+  var pm1_monthlyData = <%- JSON.stringify(data_monthly.avg_pm1) %>;
+
+  var pm1_dailyLabels = <%- JSON.stringify(data_daily.labels) %>;
+  var pm1_weeklyLabels = <%- JSON.stringify(data_weekly.labels) %>;
+  var pm1_monthlyLabels = <%- JSON.stringify(data_monthly.labels) %>;
+
   const ctx = document.getElementById("pm1-chart");
-  new Chart(ctx, {
+  const pm1Chart = new Chart(ctx, {
     type: "line",
     data: {
-      labels: label,
+      labels: pm1_dailyLabels,
       datasets: [
         {
           label: "PM1",
-          data: pm1,
+          data: pm1_dailyData,
           borderColor: "rgba(79, 209, 197, 1)",
           backgroundColor: (context) => {
             const bgColor = ["rgba(183, 236, 231, 0.5)", "rgba(184, 236, 232, 0.5)", "rgba(208, 243, 239, 0.5)", "rgba(228, 248, 246, 0.5)", "rgba(244, 252, 251, 0.5)", "rgba(255, 255, 255, 0.5)"];
@@ -136,21 +174,110 @@
         },
       },
     },
+  });
+
+  // Update chart function
+  function updateChart(chart, labels, data) {
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = data;
+    chart.update();
+  }
+
+  // Event listeners for buttons
+  document.getElementById('day-btn').addEventListener('click', function() {
+    updateChart(pm1Chart, pm1_dailyLabels, pm1_dailyData);
+  });
+
+  document.getElementById('week-btn').addEventListener('click', function() {
+    updateChart(pm1Chart, pm1_weeklyLabels, pm1_weeklyData);
+  });
+
+  document.getElementById('month-btn').addEventListener('click', function() {
+    updateChart(pm1Chart, pm1_monthlyLabels, pm1_monthlyData);
   });
 </script>
 
 <!-- PM2.5 CHART -->
 <script>
   var pm25 = <%- JSON.stringify(data.pm25) %>;
+  var pm25_dailyData = <%- JSON.stringify(data_daily.pm25) %>;
+  var pm25_weeklyData = <%- JSON.stringify(data_weekly.avg_pm25) %>;
+  var pm25_monthlyData = <%- JSON.stringify(data_monthly.avg_pm25) %>;
+
+  var pm25_dailyLabels = <%- JSON.stringify(data_daily.labels) %>;
+  var pm25_weeklyLabels = <%- JSON.stringify(data_weekly.labels) %>;
+  var pm25_monthlyLabels = <%- JSON.stringify(data_monthly.labels) %>;
+
+  var pm25_maxDataValue = Math.max(...pm25_dailyData); // Get the maximum value from your pm25 dataset
+  var pm25_minDataValue = Math.min(...pm25_dailyData); // Get the minimum value from your pm25 dataset
+
+  // Function to clamp the annotation within the data range
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+  }
+
+  var pm25_greenUpperLimit = 15.5;
+  var pm25_yellowUpperLimit = 55.4;
+  var pm25_orangeUpperLimit = 150.4
+  var pm25_redUpperLimit = 250.4
+  var pm25_brownUpperLimit = 500
+
+  pm25_greenUpperLimit = clamp(pm25_greenUpperLimit, pm25_minDataValue, pm25_maxDataValue);
+  pm25_yellowUpperLimit = clamp(pm25_yellowUpperLimit, pm25_minDataValue, pm25_maxDataValue);
+  pm25_orangeUpperLimit = clamp(pm25_orangeUpperLimit, pm25_minDataValue, pm25_maxDataValue)
+  pm25_redUpperLimit = clamp(pm25_redUpperLimit,pm25_minDataValue, pm25_maxDataValue)
+  pm25_brownUpperLimit = clamp(pm25_brownUpperLimit, pm25_minDataValue, pm25_maxDataValue)
+
+  var annotations = [
+    {
+      type: 'line',
+      yMin: pm25_greenUpperLimit,
+      yMax: pm25_greenUpperLimit,
+      borderColor: 'green',
+      borderWidth: 2,
+    },
+    {
+      type: 'line',
+      yMin: pm25_yellowUpperLimit,
+      yMax: pm25_yellowUpperLimit,
+      borderColor: 'yellow',
+      borderWidth: 2,
+    }
+  ];
+  if (pm25_maxDataValue > pm25_yellowUpperLimit) {
+  annotations.push(
+    {
+      type: 'line',
+      yMin: pm25_orangeUpperLimit,
+      yMax: pm25_orangeUpperLimit,
+      borderColor: 'orange',
+      borderWidth: 2,
+    },
+    {
+      type: 'line',
+      yMin: pm25_redUpperLimit,
+      yMax: pm25_redUpperLimit,
+      borderColor: 'red',
+      borderWidth: 2,
+    },
+    {
+      type: 'line',
+      yMin: pm25_brownUpperLimit,
+      yMax: pm25_brownUpperLimit,
+      borderColor: 'brown',
+      borderWidth: 2,
+    }
+  );
+}
   const ctx2 = document.getElementById("pm2.5-chart");
-  new Chart(ctx2, {
+  const pm25Chart = new Chart(ctx2, {
     type: "line",
     data: {
-      labels: label,
+      labels: pm25_dailyLabels,
       datasets: [
         {
           label: "PM2.5",
-          data: pm25,
+          data: pm25_dailyData,
           borderColor: "rgba(79, 209, 197, 1)",
           backgroundColor: (context) => {
             const bgColor = ["rgba(183, 236, 231, 0.5)", "rgba(184, 236, 232, 0.5)", "rgba(208, 243, 239, 0.5)", "rgba(228, 248, 246, 0.5)", "rgba(244, 252, 251, 0.5)", "rgba(255, 255, 255, 0.5)"];
@@ -181,43 +308,7 @@
           display: false,
         },
         annotation: {
-          annotations: [
-            {
-              type: 'line',
-              yMin: 15.5,
-              yMax: 15.5,
-              borderColor: 'green',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 55.4,
-              yMax: 55.4,
-              borderColor: 'yellow',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 150.4,
-              yMax: 150.4,
-              borderColor: 'orange',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 250.4,
-              yMax: 250.4,
-              borderColor: 'red',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 500,
-              yMax: 500,
-              borderColor: 'brown',
-              borderWidth: 2,
-            }
-          ]
+          annotations: annotations
         }
       },
       elements: {
@@ -248,22 +339,111 @@
         },
       },
     },
-  }
-  );
+  });
+  // Update chart function
+  function updateChart(chart, labels, data) {
+      chart.data.labels = labels;
+      chart.data.datasets[0].data = data;
+      chart.update();
+    }
+  
+    // Event listeners for buttons
+    document.getElementById('pm25-day-btn').addEventListener('click', function() {
+      updateChart(pm25Chart, pm25_dailyLabels, pm25_dailyData);
+    });
+  
+    document.getElementById('pm25-week-btn').addEventListener('click', function() {
+      updateChart(pm25Chart, pm25_weeklyLabels, pm25_weeklyData);
+    });
+  
+    document.getElementById('pm25-month-btn').addEventListener('click', function() {
+      updateChart(pm25Chart, pm25_monthlyLabels, pm25_monthlyData);
+    });
 </script>
 
 <!-- CO CHART -->
 <script>
   var co = <%- JSON.stringify(data.co) %>;
+  var co_dailyData = <%- JSON.stringify(data_daily.co) %>;
+  var co_weeklyData = <%- JSON.stringify(data_weekly.avg_co) %>;
+  var co_monthlyData = <%- JSON.stringify(data_monthly.avg_co) %>;
+
+  var co_dailyLabels = <%- JSON.stringify(data_daily.labels) %>;
+  var co_weeklyLabels = <%- JSON.stringify(data_weekly.labels) %>;
+  var co_monthlyLabels = <%- JSON.stringify(data_monthly.labels) %>;
+
+  var co_maxDataValue = Math.max(...co_dailyData); // Get the maximum value from your CO dataset
+  var co_minDataValue = Math.min(...co_dailyData); // Get the minimum value from your CO dataset
+
+  // Function to clamp the annotation within the data range
+  function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+  }
+
+  var co_greenUpperLimit = 4000;
+  var co_yellowUpperLimit = 8000;
+  var co_orangeUpperLimit = 15000;
+  var co_redUpperLimit = 30000;
+  var co_brownUpperLimit = 45000;
+
+  co_greenUpperLimit = clamp(co_greenUpperLimit, co_minDataValue, co_maxDataValue);
+  co_yellowUpperLimit = clamp(co_yellowUpperLimit, co_minDataValue, co_maxDataValue);
+  co_orangeUpperLimit = clamp(co_orangeUpperLimit, co_minDataValue, co_maxDataValue);
+  co_redUpperLimit = clamp(co_redUpperLimit, co_minDataValue, co_maxDataValue);
+  co_brownUpperLimit = clamp(co_brownUpperLimit, co_minDataValue, co_maxDataValue);
+
+  var annotations = [
+    {
+        type: 'line',
+        yMin: co_greenUpperLimit,
+        yMax: co_greenUpperLimit,
+        borderColor: 'green',
+        borderWidth: 2,
+    },
+];
+if (co_maxDataValue > co_greenUpperLimit) {
+    annotations.push(
+      {
+        type: 'line',
+        yMin: co_yellowUpperLimit,
+        yMax: co_yellowUpperLimit,
+        borderColor: 'yellow',
+        borderWidth: 2,
+    },
+    {
+            type: 'line',
+            yMin: co_orangeUpperLimit,
+            yMax: co_orangeUpperLimit,
+            borderColor: 'orange',
+            borderWidth: 2,
+        },
+        {
+            type: 'line',
+            yMin: co_redUpperLimit,
+            yMax: co_redUpperLimit,
+            borderColor: 'red',
+            borderWidth: 2,
+        },
+        {
+            type: 'line',
+            yMin: co_brownUpperLimit,
+            yMax: co_brownUpperLimit,
+            borderColor: 'brown',
+            borderWidth: 2,
+        }
+    );
+}
+
+
   const ctx3 = document.getElementById("co-chart");
-  new Chart(ctx3, {
+  const coChart = new Chart(ctx3, {
     type: "line",
     data: {
-      labels: label,
+      labels: co_dailyLabels,
       datasets: [
         {
           label: "CO",
-          data: co,
+          data: co_dailyData,
           borderColor: "rgba(79, 209, 197, 1)",
           backgroundColor: (context) => {
             const bgColor = ["rgba(183, 236, 231, 0.5)", "rgba(184, 236, 232, 0.5)", "rgba(208, 243, 239, 0.5)", "rgba(228, 248, 246, 0.5)", "rgba(244, 252, 251, 0.5)", "rgba(255, 255, 255, 0.5)"];
@@ -294,44 +474,7 @@
           display: false,
         },
         annotation: {
-          annotations: [
-            {
-              type: 'line',
-              yMin: 4000,
-              yMax: 4000,
-              borderColor: 'green',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 8000,
-              yMax: 8000,
-              borderColor: 'yellow',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 15000,
-              yMax: 15000,
-              borderColor: 'orange',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 30000,
-              yMax: 30000,
-              borderColor: 'red',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 45000,
-              yMax: 45000,
-              borderColor: 'brown',
-              borderWidth: 2,
-            }
-          ]
-        }
+          annotations: annotations
       },
     },
     elements: {
@@ -362,21 +505,113 @@
       },
     },
   },
-  );
+});
+
+function updateChart(chart, labels, data) {
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = data;
+    chart.update();
+}
+
+// Event listeners for buttons
+document.getElementById('co-day-btn').addEventListener('click', function () {
+    updateChart(coChart, co_dailyLabels, co_dailyData);
+});
+
+document.getElementById('co-week-btn').addEventListener('click', function () {
+    updateChart(coChart, co_weeklyLabels, co_weeklyData);
+});
+
+document.getElementById('co-month-btn').addEventListener('click', function () {
+    updateChart(coChart, co_monthlyLabels, co_monthlyData);
+});
+
 </script>
 
 <!-- NO2 CHART -->
 <script>
   var no2 = <%- JSON.stringify(data.no2) %>;
+
+var no2_dailyData = <%- JSON.stringify(data_daily.no2) %>;
+var no2_weeklyData = <%- JSON.stringify(data_weekly.avg_no2) %>;
+var no2_monthlyData = <%- JSON.stringify(data_monthly.avg_no2) %>;
+
+var no2_dailyLabels = <%- JSON.stringify(data_daily.labels) %>;
+var no2_weeklyLabels = <%- JSON.stringify(data_weekly.labels) %>;
+var no2_monthlyLabels = <%- JSON.stringify(data_monthly.labels) %>;
+
+var no2_maxDataValue = Math.max(...no2_dailyData); // Get the maximum value from your NO2 dataset
+var no2_minDataValue = Math.min(...no2_dailyData); // Get the minimum value from your NO2 dataset
+
+// Function to clamp the annotation within the data range
+function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+}
+
+var no2_greenUpperLimit = 80;
+var no2_yellowUpperLimit = 200;
+var no2_orangeUpperLimit = 1130;
+var no2_redUpperLimit = 2260;
+var no2_brownUpperLimit = 3000;
+
+no2_greenUpperLimit = clamp(no2_greenUpperLimit, no2_minDataValue, no2_maxDataValue);
+no2_yellowUpperLimit = clamp(no2_yellowUpperLimit, no2_minDataValue, no2_maxDataValue);
+no2_orangeUpperLimit = clamp(no2_orangeUpperLimit, no2_minDataValue, no2_maxDataValue);
+no2_redUpperLimit = clamp(no2_redUpperLimit, no2_minDataValue, no2_maxDataValue);
+no2_brownUpperLimit = clamp(no2_brownUpperLimit, no2_minDataValue, no2_maxDataValue);
+
+var annotations = [
+    {
+        type: 'line',
+        yMin: no2_greenUpperLimit,
+        yMax: no2_greenUpperLimit,
+        borderColor: 'green',
+        borderWidth: 2,
+    },
+];
+
+if (no2_maxDataValue > no2_yellowUpperLimit) {
+    annotations.push(
+        {
+            type: 'line',
+            yMin: no2_yellowUpperLimit,
+            yMax: no2_yellowUpperLimit,
+            borderColor: 'yellow',
+            borderWidth: 2,
+        },
+        {
+            type: 'line',
+            yMin: no2_orangeUpperLimit,
+            yMax: no2_orangeUpperLimit,
+            borderColor: 'orange',
+            borderWidth: 2,
+        },
+        {
+            type: 'line',
+            yMin: no2_redUpperLimit,
+            yMax: no2_redUpperLimit,
+            borderColor: 'red',
+            borderWidth: 2,
+        },
+        {
+            type: 'line',
+            yMin: no2_brownUpperLimit,
+            yMax: no2_brownUpperLimit,
+            borderColor: 'brown',
+            borderWidth: 2,
+        }
+    );
+}
+
   const ctx4 = document.getElementById("no2-chart");
-  new Chart(ctx4, {
+  const no2Chart = new Chart(ctx4, {
     type: "line",
     data: {
-      labels: label,
+      labels: no2_dailyLabels,
       datasets: [
         {
           label: "NO2",
-          data: no2,
+          data: no2_dailyData,
           borderColor: "rgba(79, 209, 197, 1)",
           backgroundColor: (context) => {
             const bgColor = ["rgba(183, 236, 231, 0.5)", "rgba(184, 236, 232, 0.5)", "rgba(208, 243, 239, 0.5)", "rgba(228, 248, 246, 0.5)", "rgba(244, 252, 251, 0.5)", "rgba(255, 255, 255, 0.5)"];
@@ -407,43 +642,7 @@
           display: false,
         },
         annotation: {
-          annotations: [
-            {
-              type: 'line',
-              yMin: 80,
-              yMax: 80,
-              borderColor: 'green',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 200,
-              yMax: 200,
-              borderColor: 'yellow',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 1130,
-              yMax: 1130,
-              borderColor: 'orange',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 2260,
-              yMax: 2260,
-              borderColor: 'red',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 3000,
-              yMax: 3000,
-              borderColor: 'brown',
-              borderWidth: 2,
-            }
-          ]
+          annotations: annotations
         }
       },
     },
@@ -476,20 +675,111 @@
     },
   },
   );
+  function updateChart(chart, labels, data) {
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = data;
+        chart.update();
+    }
+
+    // Event listeners for buttons
+document.getElementById('no2-day-btn').addEventListener('click', function () {
+    updateChart(no2Chart, no2_dailyLabels, no2_dailyData);
+});
+
+document.getElementById('no2-week-btn').addEventListener('click', function () {
+    updateChart(no2Chart, no2_weeklyLabels, no2_weeklyData);
+});
+
+document.getElementById('no2-month-btn').addEventListener('click', function () {
+    updateChart(no2Chart, no2_monthlyLabels, no2_monthlyData);
+});
+
 </script>
 
 <!-- PM10 CHART -->
 <script>
   var pm10 = <%- JSON.stringify(data.pm10) %>;
+  var pm10_dailyData = <%- JSON.stringify(data_daily.pm10) %>;
+var pm10_weeklyData = <%- JSON.stringify(data_weekly.avg_pm10) %>;
+var pm10_monthlyData = <%- JSON.stringify(data_monthly.avg_pm10) %>;
+
+var pm10_dailyLabels = <%- JSON.stringify(data_daily.labels) %>;
+var pm10_weeklyLabels = <%- JSON.stringify(data_weekly.labels) %>;
+var pm10_monthlyLabels = <%- JSON.stringify(data_monthly.labels) %>;
+
+var pm10_maxDataValue = Math.max(...pm10_dailyData); // Get the maximum value from your PM10 dataset
+var pm10_minDataValue = Math.min(...pm10_dailyData); // Get the minimum value from your PM10 dataset
+
+// Function to clamp the annotation within the data range
+function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+}
+
+var pm10_greenUpperLimit = 50;
+var pm10_yellowUpperLimit = 150;
+var pm10_orangeUpperLimit = 320;
+var pm10_redUpperLimit = 420;
+var pm10_brownUpperLimit = 500;
+
+pm10_greenUpperLimit = clamp(pm10_greenUpperLimit, pm10_minDataValue, pm10_maxDataValue);
+pm10_yellowUpperLimit = clamp(pm10_yellowUpperLimit, pm10_minDataValue, pm10_maxDataValue);
+pm10_orangeUpperLimit = clamp(pm10_orangeUpperLimit, pm10_minDataValue, pm10_maxDataValue);
+pm10_redUpperLimit = clamp(pm10_redUpperLimit, pm10_minDataValue, pm10_maxDataValue);
+pm10_brownUpperLimit = clamp(pm10_brownUpperLimit, pm10_minDataValue, pm10_maxDataValue);
+
+var annotations = [
+    {
+        type: 'line',
+        yMin: pm10_greenUpperLimit,
+        yMax: pm10_greenUpperLimit,
+        borderColor: 'green',
+        borderWidth: 2,
+    },
+];
+
+if (pm10_maxDataValue > pm10_yellowUpperLimit) {
+    annotations.push(
+        {
+            type: 'line',
+            yMin: pm10_yellowUpperLimit,
+            yMax: pm10_yellowUpperLimit,
+            borderColor: 'yellow',
+            borderWidth: 2,
+        },
+        {
+            type: 'line',
+            yMin: pm10_orangeUpperLimit,
+            yMax: pm10_orangeUpperLimit,
+            borderColor: 'orange',
+            borderWidth: 2,
+        },
+        {
+            type: 'line',
+            yMin: pm10_redUpperLimit,
+            yMax: pm10_redUpperLimit,
+            borderColor: 'red',
+            borderWidth: 2,
+        },
+        {
+            type: 'line',
+            yMin: pm10_brownUpperLimit,
+            yMax: pm10_brownUpperLimit,
+            borderColor: 'brown',
+            borderWidth: 2,
+        }
+    );
+}
+
+
   const ctx5 = document.getElementById("pm10-chart");
-  new Chart(ctx5, {
+  const pm10Chart = new Chart(ctx5, {
     type: "line",
     data: {
-      labels: label,
+      labels: pm10_dailyLabels,
       datasets: [
         {
           label: "PM10",
-          data: pm10,
+          data: pm10_dailyData,
           borderColor: "rgba(79, 209, 197, 1)",
           backgroundColor: (context) => {
             const bgColor = ["rgba(183, 236, 231, 0.5)", "rgba(184, 236, 232, 0.5)", "rgba(208, 243, 239, 0.5)", "rgba(228, 248, 246, 0.5)", "rgba(244, 252, 251, 0.5)", "rgba(255, 255, 255, 0.5)"];
@@ -520,43 +810,7 @@
           display: false,
         },
         annotation: {
-          annotations: [
-            {
-              type: 'line',
-              yMin: 50,
-              yMax: 50,
-              borderColor: 'green',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 150,
-              yMax: 150,
-              borderColor: 'yellow',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 350,
-              yMax: 350,
-              borderColor: 'orange',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 420,
-              yMax: 420,
-              borderColor: 'red',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 500,
-              yMax: 500,
-              borderColor: 'brown',
-              borderWidth: 2,
-            }
-          ]
+          annotations: annotations
         },
       },
       elements: {
@@ -588,20 +842,111 @@
       },
     },
   });
+  function updateChart(chart, labels, data) {
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = data;
+        chart.update();
+    }
+
+  // Event listeners for buttons
+document.getElementById('pm10-day-btn').addEventListener('click', function () {
+    updateChart(pm10Chart, pm10_dailyLabels, pm10_dailyData);
+});
+
+document.getElementById('pm10-week-btn').addEventListener('click', function () {
+    updateChart(pm10Chart, pm10_weeklyLabels, pm10_weeklyData);
+});
+
+document.getElementById('pm10-month-btn').addEventListener('click', function () {
+    updateChart(pm10Chart, pm10_monthlyLabels, pm10_monthlyData);
+});
+
 </script>
 
 <!-- O3 CHART -->
 <script>
   var o3 = <%- JSON.stringify(data.o3) %>;
+  var o3_dailyData = <%- JSON.stringify(data_daily.o3) %>;
+var o3_weeklyData = <%- JSON.stringify(data_weekly.avg_o3) %>;
+var o3_monthlyData = <%- JSON.stringify(data_monthly.avg_o3) %>;
+
+var o3_dailyLabels = <%- JSON.stringify(data_daily.labels) %>;
+var o3_weeklyLabels = <%- JSON.stringify(data_weekly.labels) %>;
+var o3_monthlyLabels = <%- JSON.stringify(data_monthly.labels) %>;
+
+var o3_maxDataValue = Math.max(...o3_dailyData); // Get the maximum value from your O3 dataset
+var o3_minDataValue = Math.min(...o3_dailyData); // Get the minimum value from your O3 dataset
+
+// Function to clamp the annotation within the data range
+function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+}
+
+var o3_greenUpperLimit = 120;
+var o3_yellowUpperLimit = 235;
+var o3_orangeUpperLimit = 400;
+var o3_redUpperLimit = 800;
+var o3_brownUpperLimit = 1000;
+
+o3_greenUpperLimit = clamp(o3_greenUpperLimit, o3_minDataValue, o3_maxDataValue);
+o3_yellowUpperLimit = clamp(o3_yellowUpperLimit, o3_minDataValue, o3_maxDataValue);
+o3_orangeUpperLimit = clamp(o3_orangeUpperLimit, o3_minDataValue, o3_maxDataValue);
+o3_redUpperLimit = clamp(o3_redUpperLimit, o3_minDataValue, o3_maxDataValue);
+o3_brownUpperLimit = clamp(o3_brownUpperLimit, o3_minDataValue, o3_maxDataValue);
+
+var annotations = [
+    {
+        type: 'line',
+        yMin: o3_greenUpperLimit,
+        yMax: o3_greenUpperLimit,
+        borderColor: 'green',
+        borderWidth: 2,
+    },
+];
+
+if (o3_maxDataValue > o3_yellowUpperLimit) {
+    annotations.push(
+        {
+            type: 'line',
+            yMin: o3_yellowUpperLimit,
+            yMax: o3_yellowUpperLimit,
+            borderColor: 'yellow',
+            borderWidth: 2,
+        },
+        {
+            type: 'line',
+            yMin: o3_orangeUpperLimit,
+            yMax: o3_orangeUpperLimit,
+            borderColor: 'orange',
+            borderWidth: 2,
+        },
+        {
+            type: 'line',
+            yMin: o3_redUpperLimit,
+            yMax: o3_redUpperLimit,
+            borderColor: 'red',
+            borderWidth: 2,
+        },
+        {
+            type: 'line',
+            yMin: o3_brownUpperLimit,
+            yMax: o3_brownUpperLimit,
+            borderColor: 'brown',
+            borderWidth: 2,
+        }
+    );
+}
+
+
   const ctx6 = document.getElementById("o3-chart");
-  new Chart(ctx6, {
+  const o3Chart = new Chart(ctx6, {
     type: "line",
     data: {
-      labels: label,
+      labels: o3_dailyLabels,
       datasets: [
         {
           label: "O3",
-          data: o3,
+          data: o3_dailyData,
           borderColor: "rgba(79, 209, 197, 1)",
           backgroundColor: (context) => {
             const bgColor = ["rgba(183, 236, 231, 0.5)", "rgba(184, 236, 232, 0.5)", "rgba(208, 243, 239, 0.5)", "rgba(228, 248, 246, 0.5)", "rgba(244, 252, 251, 0.5)", "rgba(255, 255, 255, 0.5)"];
@@ -632,43 +977,7 @@
           display: false,
         },
         annotation: {
-          annotations: [
-            {
-              type: 'line',
-              yMin: 120,
-              yMax: 120,
-              borderColor: 'green',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 235,
-              yMax: 235,
-              borderColor: 'yellow',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 400,
-              yMax: 400,
-              borderColor: 'orange',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 800,
-              yMax: 800,
-              borderColor: 'red',
-              borderWidth: 2,
-            },
-            {
-              type: 'line',
-              yMin: 1000,
-              yMax: 1000,
-              borderColor: 'brown',
-              borderWidth: 2,
-            }
-          ]
+          annotations: annotations
         },
       },
       elements: {
@@ -697,6 +1006,25 @@
       },
     },
   });
+  function updateChart(chart, labels, data) {
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = data;
+        chart.update();
+    }
+  
+  // Event listeners for buttons
+document.getElementById('o3-day-btn').addEventListener('click', function () {
+    updateChart(o3Chart, o3_dailyLabels, o3_dailyData);
+});
+
+document.getElementById('o3-week-btn').addEventListener('click', function () {
+    updateChart(o3Chart, o3_weeklyLabels, o3_weeklyData);
+});
+
+document.getElementById('o3-month-btn').addEventListener('click', function () {
+    updateChart(o3Chart, o3_monthlyLabels, o3_monthlyData);
+});
+
 </script>
 
 </html>

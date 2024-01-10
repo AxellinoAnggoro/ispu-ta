@@ -528,6 +528,10 @@ html {
   margin-top: 2.5rem;
   margin-bottom: 2.5rem;
 }
+.mx-2{
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
 .mt-12{
   margin-top: 3rem;
 }
@@ -536,6 +540,12 @@ html {
 }
 .mb-2{
   margin-bottom: 0.5rem;
+}
+.mr-2{
+  margin-right: 0.5rem;
+}
+.ml-2{
+  margin-left: 0.5rem;
 }
 .ml-4{
   margin-left: 1rem;
@@ -551,9 +561,6 @@ html {
 }
 .mt-2{
   margin-top: 0.5rem;
-}
-.ml-2{
-  margin-left: 0.5rem;
 }
 .block{
   display: block;
@@ -681,6 +688,9 @@ html {
 .rounded-xl{
   border-radius: 0.75rem;
 }
+.rounded{
+  border-radius: 0.25rem;
+}
 .rounded-2xl{
   border-radius: 1rem;
 }
@@ -751,13 +761,13 @@ html {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
-.py-6{
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-}
 .px-4{
   padding-left: 1rem;
   padding-right: 1rem;
+}
+.py-6{
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 .py-5{
   padding-top: 1.25rem;
@@ -926,12 +936,10 @@ html {
   -webkit-animation-duration: 500ms;
           animation-duration: 500ms;
 }
-
 .hover\:bg-gray-200:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
-
 @media (min-width: 640px){
 
   .sm\:h-14{
@@ -992,14 +1000,12 @@ html {
     line-height: 2rem;
   }
 }
-
 @media (min-width: 768px){
 
   .md\:grid-cols-2{
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-
 @media (min-width: 1024px){
 
   .lg\:mr-6{
@@ -1099,7 +1105,6 @@ html {
     line-height: 1.75rem;
   }
 }
-
 @media (min-width: 1280px){
 
   .xl\:ml-20{

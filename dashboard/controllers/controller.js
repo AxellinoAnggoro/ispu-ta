@@ -23,21 +23,27 @@ export async function dashboard(req, res, next) {
   if (initialData.pm10 >= 0 && initialData.aqi <= 50) {
     initialData.aqi_label = "Healthy";
     initialData.aqi_label_color = "text-healthy";
+    initialData.aqi_bg_color = "bg-healthy";
   } else if (initialData.aqi > 50 && initialData.aqi <= 100) {
     initialData.aqi_label = "Moderate";
     initialData.aqi_label_color = "text-moderate";
+    initialData.aqi_bg_color = "bg-moderate"
   } else if (initialData.aqi > 100 && initialData.aqi <= 150) {
     initialData.aqi_label = "Unhealthy for Sensitive Groups";
     initialData.aqi_label_color = "text-unhealthy";
+    initialData.aqi_bg_color = "bg-unhealthy"
   } else if (initialData.aqi > 150 && initialData.aqi <= 200) {
     initialData.aqi_label = "Unhealthy";
     initialData.aqi_label_color = "text-unhealthy2";
+    initialData.aqi_bg_color = "bg-unhealthy2"
   } else if (initialData.aqi > 200 && initialData.aqi <= 300) {
     initialData.aqi_label = "Very Unhealthy";
     initialData.aqi_label_color = "text-veryunhealthy";
+    initialData.aqi_bg_color = "bg-veryunhealthy"
   } else if (initialData.aqi > 300 && initialData.aqi <= 500) {
     initialData.aqi_label = "Hazardous";
     initialData.aqi_label_color = "text-hazardous";
+    initialData.aqi_bg_color = "bg-hazardous"
   }
 
   if (initialData.pm10 >= 0 && initialData.pm10 <= 50) {
@@ -137,6 +143,11 @@ export async function forecasting(req, res, next) {
 
 export async function history(req, res, next) {
   let historyData = await db.get_history_data();
+  let dailyData = await db.get_daily_data();
+  let weeklyData = await db.get_weekly_data();
+  let monthlyData = await db.get_monthly_data();
+
+  // console.log(dailyData)
 
   const data = {
     labels: [],
@@ -162,6 +173,76 @@ export async function history(req, res, next) {
     data.aqi.push(element.aqi);
   });
 
+  const data_daily = {
+    labels: [],
+    pm1: [],
+    pm25: [],
+    pm10: [],
+    co: [],
+    no2: [],
+    o3: [],
+    aqi: [],
+  }
 
-  res.render("history", { data, activePath: "history" });
+  dailyData.forEach((element) => {
+    const date = new Date(element.timestamp);
+    const formattedTime = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
+    data_daily.labels.push(formattedTime);
+    data_daily.pm1.push(element.pm1);
+    data_daily.pm25.push(element.pm2_5);
+    data_daily.pm10.push(element.pm10);
+    data_daily.co.push(element.co);
+    data_daily.no2.push(element.no2);
+    data_daily.o3.push(element.o3);
+    data_daily.aqi.push(element.aqi);
+  });
+
+  const data_weekly = {
+    labels: [],
+    avg_pm1: [],
+    avg_pm25: [],
+    avg_pm10: [],
+    avg_co: [],
+    avg_no2: [],
+    avg_o3: [],
+    avg_aqi: [],
+  };
+
+  weeklyData.forEach((element) => {
+    const formattedDate = moment(element.date).format('MM-DD'); // Format yyyy-mm-dd
+    data_weekly.labels.push(formattedDate);
+    data_weekly.avg_pm1.push(element.avg_pm1);
+    data_weekly.avg_pm25.push(element.avg_pm2_5);
+    data_weekly.avg_pm10.push(element.avg_pm10);
+    data_weekly.avg_co.push(element.avg_co);
+    data_weekly.avg_no2.push(element.avg_no2);
+    data_weekly.avg_o3.push(element.avg_o3);
+    data_weekly.avg_aqi.push(element.avg_aqi);
+  });
+
+  const data_monthly = {
+    labels: [],
+    avg_pm1: [],
+    avg_pm25: [],
+    avg_pm10: [],
+    avg_co: [],
+    avg_no2: [],
+    avg_o3: [],
+    avg_aqi: [],
+  };
+
+  monthlyData.forEach((element) => {
+    const formattedDate = moment(element.date).format('MM-DD'); // Format yyyy-mm-dd
+    data_monthly.labels.push(formattedDate);
+    data_monthly.avg_pm1.push(element.avg_pm1);
+    data_monthly.avg_pm25.push(element.avg_pm2_5);
+    data_monthly.avg_pm10.push(element.avg_pm10);
+    data_monthly.avg_co.push(element.avg_co);
+    data_monthly.avg_no2.push(element.avg_no2);
+    data_monthly.avg_o3.push(element.avg_o3);
+    data_monthly.avg_aqi.push(element.avg_aqi);
+  });
+
+
+  res.render("history", { data, data_daily, data_weekly, data_monthly, activePath: "history" });
 }

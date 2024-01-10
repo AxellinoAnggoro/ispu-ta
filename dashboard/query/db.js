@@ -45,6 +45,103 @@ db.get_history_data = () => {
     });
 }
 
+db.get_daily_data = () => {
+    return new Promise((resolve, reject) => {
+        const from = moment().tz("Asia/Jakarta").startOf('day').format('YYYY-MM-DDTHH:mm:ss');
+        const currentDateTime = moment().tz("Asia/Jakarta").format('YYYY-MM-DDTHH:mm:ss');
+
+        console.log(from)
+        console.log(currentDateTime)
+
+        pool.query(
+            'SELECT * FROM gas_polutan WHERE timestamp >= ? AND timestamp <= ?',
+            [from, currentDateTime],
+            (err, results) => {
+                if (err) {
+                    console.error('Error fetching data from MySQL', err);
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            }
+        );
+    });
+};
+
+db.get_weekly_data = () => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT
+                DATE(timestamp) as date,
+                AVG(temp) as avg_temp,
+                AVG(hum) as avg_hum,
+                AVG(pre) as avg_pre,
+                AVG(co) as avg_co,
+                AVG(pm2_5) as avg_pm2_5,
+                AVG(no2) as avg_no2,
+                AVG(pm1) as avg_pm1,
+                AVG(o3) as avg_o3,
+                AVG(pm10) as avg_pm10,
+                AVG(aqi) as avg_aqi
+            FROM
+                gas_polutan
+            WHERE
+                DATE(timestamp) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND
+                DATE(timestamp) < CURDATE()
+            GROUP BY
+                DATE(timestamp)
+            ORDER BY
+                date
+        `;
+
+        pool.query(query, (err, results) => {
+            if (err) {
+                console.error('Error fetching weekly average data from MySQL', err);
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+};
+
+db.get_monthly_data = () => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT
+                DATE(timestamp) as date,
+                AVG(temp) as avg_temp,
+                AVG(hum) as avg_hum,
+                AVG(pre) as avg_pre,
+                AVG(co) as avg_co,
+                AVG(pm2_5) as avg_pm2_5,
+                AVG(no2) as avg_no2,
+                AVG(pm1) as avg_pm1,
+                AVG(o3) as avg_o3,
+                AVG(pm10) as avg_pm10,
+                AVG(aqi) as avg_aqi
+            FROM
+                gas_polutan
+            WHERE
+                DATE(timestamp) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND
+                DATE(timestamp) < CURDATE()
+            GROUP BY
+                DATE(timestamp)
+            ORDER BY
+                date
+        `;
+
+        pool.query(query, (err, results) => {
+            if (err) {
+                console.error('Error fetching monthly average data from MySQL', err);
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+};
+
 db.get_avg_pm = () => {
     return new Promise((resolve, reject) => {
         pool.query(`
