@@ -28,5 +28,5 @@ app.use('/', router)
 //listen to port
 server.listen(PORT, () => {
     console.log(`server is listening on ${PORT},
-    http://localhost:${PORT}`)
+    http://0.0.0.0:${PORT}`)
 })
