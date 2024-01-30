@@ -9,7 +9,7 @@ Ensure you have the following prerequisites installed:
     ```sh
     sudo apt update && sudo apt upgrade
     curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-    sudo apt-get install -y nodejs
+    sudo apt install nodejs
     ```
 * npm
     ```sh
@@ -32,8 +32,9 @@ Follow these steps to install and set up the Air Quality Forecasting Service:
    * Locate the env.example file in the repository.
    * Fill in the necessary environment variables (DATABASE_URL)
    * Save the file as .env
-4. Run the Dashboard:
+4. Install Requirement and Run the Dashboard:
     ```sh
+    npm i
     npm run start
     ```
 
