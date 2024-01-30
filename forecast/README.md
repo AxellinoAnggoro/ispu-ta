@@ -6,7 +6,16 @@ Welcome to the Air Quality Forecasting Service! This service predicts air qualit
 
 Ensure you have the following prerequisites installed:
 * Python 3.10.12
+    ```sh
+    sudo apt update && sudo apt upgrade
+    sudo add-apt-repository ppa:deadsnakes/ppa -y
+    sudo apt update
+    sudo apt install python3.10
+    ```
 * pip (Python package installer)
+    ```sh
+    sudo apt install python3-pip
+    ```
 
 ### Installation
 

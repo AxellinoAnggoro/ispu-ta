@@ -6,7 +6,15 @@ Welcome to the Air Quality Dashboard Monitoring project! This dashboard allows y
 
 Ensure you have the following prerequisites installed:
 * Node.js
+    ```sh
+    sudo apt update && sudo apt upgrade
+    curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+    ```
 * npm
+    ```sh
+    sudo npm install -g npm@latest
+    ```
 
 ### Installation
 
@@ -16,9 +24,9 @@ Follow these steps to install and set up the Air Quality Forecasting Service:
     ```sh
     https://github.com/AxellinoAnggoro/ispu-ta.git
     ```
-2. Install NPM Dependencies:
+2. Open port 3000:
     ```sh
-    npm install
+    sudo ufw allow 3000
     ```
 3. Fill Environment Configuration:
    * Locate the env.example file in the repository.
