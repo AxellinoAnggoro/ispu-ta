@@ -5,15 +5,12 @@ Welcome to the Air Quality Dashboard Monitoring project! This dashboard allows y
 ### Prerequisites
 
 Ensure you have the following prerequisites installed:
-* Node.js
+* Node.js and npm
     ```sh
-    sudo apt update && sudo apt upgrade
+    apt update
+    apt install curl
     curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-    sudo apt install nodejs
-    ```
-* npm
-    ```sh
-    sudo npm install -g npm@latest
+    apt install nodejs
     ```
 
 ### Installation
@@ -26,7 +23,7 @@ Follow these steps to install and set up the Air Quality Forecasting Service:
     ```
 2. Open port 3000:
     ```sh
-    sudo ufw allow 3000
+    ufw allow 3000
     ```
 3. Fill Environment Configuration:
    * Locate the env.example file in the repository.

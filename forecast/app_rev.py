@@ -11,26 +11,26 @@ db_connection_str = os.getenv("DATABASE_URL")
 db_engine  = create_engine(db_connection_str)
 
 
-# db_connection = MySQLdb.connect(
-#     host= os.getenv("DB_HOST"),
-#     user=os.getenv("DB_USERNAME"),
-#     passwd= os.getenv("DB_PASSWORD"),
-#     db= os.getenv("DB_NAME"),
-#     autocommit = True,
-#     ssl_mode = "VERIFY_IDENTITY",
-#     ssl      = {
-#         "ca": "/etc/ssl/certs/ca-certificates.crt"
-#     }
-# )
-
 db_connection = MySQLdb.connect(
-    host=os.getenv("DB_HOST"),
-    database=os.getenv("DB_NAME"),
+    host= os.getenv("DB_HOST"),
     user=os.getenv("DB_USERNAME"),
-    password=os.getenv("DB_PASSWORD"),
+    passwd= os.getenv("DB_PASSWORD"),
+    db= os.getenv("DB_NAME"),
     autocommit = True,
     ssl_mode = "VERIFY_IDENTITY",
+    ssl      = {
+        "ca": "/etc/ssl/certs/ca-certificates.crt"
+    }
 )
+
+# db_connection = MySQLdb.connect(
+#     host=os.getenv("DB_HOST"),
+#     database=os.getenv("DB_NAME"),
+#     user=os.getenv("DB_USERNAME"),
+#     password=os.getenv("DB_PASSWORD"),
+#     autocommit = True,
+#     ssl_mode = "VERIFY_IDENTITY",
+# )
 
 cursor = db_connection.cursor()
 # Menjalankan query untuk menguji koneksi
